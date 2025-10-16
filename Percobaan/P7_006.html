@@ -5,7 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Data Produk</title>
 
-      <!-- Bootstrap CSS  -->
+      <!-- Bootstrap CSS -->
       <link
          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
          rel="stylesheet"
@@ -17,33 +17,25 @@
             font-family: "Tahoma", sans-serif;
             padding: 20px;
          }
-
          .container {
             margin-top: 30px;
          }
-
-         .table-container {
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            background-color: white;
-            padding: 20px;
-         }
-
-         h1 {
-            text-align: center;
-            margin-bottom: 30px;
-         }
-
-         .table thead th {
-            background-color: #343a40;
-            color: white;
-         }
-
+         .table-container,
          .form-container {
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             background-color: white;
             padding: 20px;
+         }
+         .table-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+         }
+         .table thead th {
+            background-color: #343a40;
+            color: white;
+         }
+         .form-container {
             margin-top: 20px;
             display: none;
          }
@@ -71,7 +63,7 @@
                </thead>
                <tbody>
                   <tr>
-                     <td colspan="7" class="text-center">
+                     <td colspan="8" class="text-center">
                         Data produk akan muncul di sini...
                      </td>
                   </tr>
@@ -136,7 +128,6 @@
                </select>
             </div>
 
-            <!-- tambahkan id pada tombol submit -->
             <button type="submit" class="btn btn-success" id="submitBtn">
                Submit
             </button>
@@ -151,221 +142,165 @@
 
       <script>
          const url = "https://api.roniprsty.com/produk/read.php";
-         const createUrl = "https://api.roniprsty.com/produk/create.php"; // endpoint untuk tambah data
+         const createUrl = "https://api.roniprsty.com/produk/create.php";
          const updateUrl = "https://api.roniprsty.com/produk/update.php";
          const deleteUrl = "https://api.roniprsty.com/produk/delete.php";
 
-         // Ambil data produk dari API
+         // Ambil data produk
          async function getProducts() {
-             try {
-                 let response = await fetch(url);
-                 if (!response.ok)
-                     throw new Error(
-                         HTTP error! status: ${response.status}
-                     );
+            try {
+               let response = await fetch(url);
+               if (!response.ok)
+                  throw new Error(`HTTP error! status: ${response.status}`);
 
-                 let products = await response.json();
-                 let tableBody = document.querySelector(
-                     "#product-table tbody"
-                 );
-                 tableBody.innerHTML = "";
+               let products = await response.json();
+               let tableBody = document.querySelector("#product-table tbody");
+               tableBody.innerHTML = "";
 
-                 products.forEach((product) => {
-                     let row = `
-                      <tr>
-                          <td>${product.id}</td>
-                          <td>${product.nama_produk}</td>
-                          <td>${product.jenis_produk}</td>
-                          <td>${product.stok}</td>
-                          <td>${product.harga_beli}</td>
-                          <td>${product.harga_jual}</td>
-                          <td>${product.status}</td>
-                          <td>
-                              <button class="btn btn-warning btn-sm" onclick="editProduct(${product.id})">Edit</button>
-                              <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button>
-
-                          </td>
-                      </tr>
-                  `;
-                     tableBody.innerHTML += row;
-                 });
-             } catch (error) {
-                 console.error("Gagal mengambil data produk:", error);
-                 document.querySelector("#product-table tbody").innerHTML =
-                     '<tr><td colspan="7" class="text-center">Tidak dapat mengambil data produk.</td></tr>';
-             }
+               products.forEach((product) => {
+                  let row = `
+                  <tr>
+                     <td>${product.id}</td>
+                     <td>${product.nama_produk}</td>
+                     <td>${product.jenis_produk}</td>
+                     <td>${product.stok}</td>
+                     <td>${product.harga_beli}</td>
+                     <td>${product.harga_jual}</td>
+                     <td>${product.status}</td>
+                     <td>
+                        <button class="btn btn-warning btn-sm" onclick="editProduct(${product.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button>
+                     </td>
+                  </tr>`;
+                  tableBody.innerHTML += row;
+               });
+            } catch (error) {
+               console.error("Gagal mengambil data produk:", error);
+               document.querySelector("#product-table tbody").innerHTML =
+                  '<tr><td colspan="8" class="text-center">Tidak dapat mengambil data produk.</td></tr>';
+            }
          }
 
          getProducts();
 
-         // Tampilkan form tambah produk
+         // Tombol Tambah Data
          document
-             .getElementById("addDataBtn")
-             .addEventListener("click", function () {
-                 //reset judul form dan tombol submit ketika menambahkan produk baru
-                 document.getElementById("formTitle").textContent =
-                     "Tambah Produk Baru";
-                 document.getElementById("submitBtn").textContent = "Submit";
-                 document.getElementById("addProductForm").reset(); //reset form
-                 document.getElementById("formContainer").style.display =
-                     "block";
-                 // document.getElementById("formContainer").style.display =
-                 //     "block";
-             });
+            .getElementById("addDataBtn")
+            .addEventListener("click", function () {
+               document.getElementById("formTitle").textContent =
+                  "Tambah Produk Baru";
+               document.getElementById("submitBtn").textContent = "Submit";
+               document.getElementById("addProductForm").reset();
+               delete document.getElementById("addProductForm").dataset.id; //hapus id mode edit
+               document.getElementById("formContainer").style.display = "block";
+            });
 
-         // Tombol cancel
+         // Tombol Cancel
          document
-             .getElementById("cancelBtn")
-             .addEventListener("click", function () {
-                 document.getElementById("formContainer").style.display =
+            .getElementById("cancelBtn")
+            .addEventListener("click", function () {
+               document.getElementById("formContainer").style.display = "none";
+            });
+
+         // Submit Form
+         document
+            .getElementById("addProductForm")
+            .addEventListener("submit", async function (e) {
+               e.preventDefault();
+
+               const id = this.dataset.id;
+               const productData = {
+                  nama_produk: document.getElementById("namaProduk").value,
+                  jenis_produk: document.getElementById("jenisProduk").value,
+                  stok: document.getElementById("stokProduk").value,
+                  harga_beli: document.getElementById("hargaBeli").value,
+                  harga_jual: document.getElementById("hargaJual").value,
+                  status: document.getElementById("statusProduk").value,
+               };
+
+               try {
+                  let response;
+                  if (id) {
+                     productData.id = id;
+                     response = await fetch(updateUrl, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(productData),
+                     });
+                  } else {
+                     response = await fetch(createUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(productData),
+                     });
+                  }
+
+                  if (!response.ok)
+                     throw new Error(`HTTP error! status: ${response.status}`);
+
+                  alert(
+                     id
+                        ? "Produk berhasil diperbarui"
+                        : "Produk berhasil ditambahkan"
+                  );
+                  getProducts();
+                  document.getElementById("formContainer").style.display =
                      "none";
-             });
+               } catch (error) {
+                  console.error("Gagal mengirim data produk:", error);
+                  alert("Gagal mengirim data produk.");
+               }
+            });
 
-         // Submit form produk
-         document
-             .getElementById("addProductForm")
-             .addEventListener("submit", async function (e) {
-                 e.preventDefault();
-
-                 //ambil nilai dari form
-                 const id = this.dataset.id; // ambil id jika ada
-                 const namaProduk =
-                     document.getElementById("namaProduk").value;
-                 const jenisProduk =
-                     document.getElementById("jenisProduk").value;
-                 const stokProduk =
-                     document.getElementById("stokProduk").value;
-                 const hargaBeli =
-                     document.getElementById("hargaBeli").value;
-                 const hargaJual =
-                     document.getElementById("hargaJual").value;
-                 const statusProduk =
-                     document.getElementById("statusProduk").value;
-
-                 const productData = {
-                     nama_produk: namaProduk,
-                     jenis_produk: jenisProduk,
-                     stok: stokProduk,
-                     harga_beli: hargaBeli,
-                     harga_jual: hargaJual,
-                     status: statusProduk,
-                 };
-
-                 try {
-                     if (id) {
-                         //update produk yang ada
-                         productData.id = id; //tambahkan id produk
-                         let response = await fetch(updateUrl, {
-                             method: "PUT",
-                             headers: {
-                                 "Content-Type": "application/json",
-                             },
-                             body: JSON.stringify(productData),
-                         });
-
-                         if (!response.ok)
-                             throw new Error(
-                                 HTTP error! status: ${response.status}
-                             );
-                         alert("Produk berhasil diperbarui");
-                     } else {
-                         //tambahkan produk baru
-                         let response = await fetch(createUrl, {
-                             method: "POST",
-                             headers: {
-                                 "Content-Type": "application/json",
-                             },
-                             body: JSON.stringify(productData),
-                         });
-
-                         if (!response.ok)
-                             throw new Error(
-                                 HTTP error! status: ${response.status}
-                             );
-                     }
-
-                     //perbarui tabel produk setelah menambahkan atau memperbarui
-                     getProducts();
-                     document.getElementById("formContainer").style.display =
-                         "none"; //sembunyikan form setelah submit
-                 } catch (error) {
-                     console.error("Gagal mengirim data produk:", error);
-                     alert("Gagal mengirim data produk.");
-                 }
-             });
-
-         //FUNGSI UNTUK MENGEDIT PRODUK
+         // Edit Produk
          async function editProduct(id) {
-             try {
-                 //dapatkan data produk yang akan diedit menggunakan detailUrl
-                 const detailUrl = https://api.roniprsty.com/produk/detail.php?id=${id};
-                 let response = await fetch(detailUrl);
-                 if (!response.ok)
-                     throw new Error(
-                         HTTP error! status: ${response.status}
-                     );
+            try {
+               const detailUrl = `https://api.roniprsty.com/produk/detail.php?id=${id}`;
+               let response = await fetch(detailUrl);
+               if (!response.ok)
+                  throw new Error(`HTTP error! status: ${response.status}`);
 
-                 let product = await response.json();
+               let product = await response.json();
+               if (!product || !product.nama_produk)
+                  throw new Error("Data produk tidak valid");
 
-                 //periksa apakah data produk diterima dengan benar
-                 if (!product || !product.nama_produk) {
-                     throw new Error(
-                         "Data produk tidak ditemukan atau struktur data salah"
-                     );
-                 }
+               document.getElementById("namaProduk").value =
+                  product.nama_produk;
+               document.getElementById("jenisProduk").value =
+                  product.jenis_produk;
+               document.getElementById("stokProduk").value = product.stok;
+               document.getElementById("hargaBeli").value = product.harga_beli;
+               document.getElementById("hargaJual").value = product.harga_jual;
+               document.getElementById("statusProduk").value = product.status;
 
-                 //isi form dengan data produk
-                 document.getElementById("namaProduk").value =
-                     product.nama_produk;
-                 document.getElementById("jenisProduk").value =
-                     product.jenis_produk;
-                 document.getElementById("stokProduk").value = product.stok;
-                 document.getElementById("hargaBeli").value =
-                     product.harga_beli;
-                 document.getElementById("hargaJual").value =
-                     product.harga_jual;
-                 document.getElementById("statusProduk").value =
-                     product.status;
-
-                 //ubah judul form dan tombol sumbimt dan mode edit
-                 document.getElementById("formTitle").textContent =
-                     "Update Data Produk";
-                 document.getElementById("submitBtn").textContent = "Update";
-
-                 //simpan id produk ke dalam dataset form
-                 document.getElementById("addProductForm").dataset.id =
-                     product.id;
-
-                 //tampilkan form
-                 document.getElementById("formContainer").style.display =
-                     "block";
-             } catch (error) {
-                 console.error("Gagal mengambil data produk:", error);
-                 alert(
-                     "Terjadi kesalahan saat mengambil data produk, silahkan coba lagi."
-                 );
-             }
+               document.getElementById("formTitle").textContent =
+                  "Update Data Produk";
+               document.getElementById("submitBtn").textContent = "Update";
+               document.getElementById("addProductForm").dataset.id =
+                  product.id;
+               document.getElementById("formContainer").style.display = "block";
+            } catch (error) {
+               console.error("Gagal mengambil data produk:", error);
+               alert("Terjadi kesalahan saat mengambil data produk.");
+            }
          }
 
-         //FUNGSI UNTUK MENGHAPUS PRODUK
+         // Hapus Produk
          async function deleteProduct(id) {
-             if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
-                 try {
-                     let response = await fetch(${deleteUrl}?id=${id}, {
-                         method: "DELETE",
-                     });
-
-                     if (!response.ok)
-                         throw new Error(
-                             HTTP error! status: ${response.status}
-                         );
-                     alert("Produk berhasil dihapus");
-                     getProducts(); //muat ulang data produk
-                 } catch (error) {
-                     console.error("Gagal menghapus produk:", error);
-                     alert("Gagal menghapus produk");
-                 }
-             }
+            if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+               try {
+                  let response = await fetch(`${deleteUrl}?id=${id}`, {
+                     method: "DELETE",
+                  });
+                  if (!response.ok)
+                     throw new Error(`HTTP error! status: ${response.status}`);
+                  alert("Produk berhasil dihapus");
+                  getProducts();
+               } catch (error) {
+                  console.error("Gagal menghapus produk:", error);
+                  alert("Gagal menghapus produk");
+               }
+            }
          }
       </script>
    </body>
