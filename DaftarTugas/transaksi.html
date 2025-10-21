@@ -3,195 +3,306 @@
    <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Manajemen Transaksi</title>
+      <title>Data Transaksi</title>
+
+      <!-- Bootstrap CSS -->
       <link
-         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
          rel="stylesheet"
       />
+
+      <style>
+         body {
+            background-color: #f8f9fa;
+            font-family: "Tahoma", sans-serif;
+            padding: 20px;
+         }
+         .container {
+            margin-top: 30px;
+         }
+         .table-container,
+         .form-container {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: white;
+            padding: 20px;
+         }
+         .table-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+         }
+         .table thead th {
+            background-color: #343a40;
+            color: white;
+         }
+         .form-container {
+            margin-top: 20px;
+            display: none;
+         }
+      </style>
    </head>
-   <body class="bg-light">
-      <div class="container mt-5">
-         <h2 class="text-center mb-4">📋 Manajemen Transaksi</h2>
-
-         <!-- Form Create / Update -->
-         <div class="card p-4 mb-4">
-            <h4 id="form-title">Tambah Transaksi</h4>
-            <form id="transaksiForm">
-               <input type="hidden" id="id_transaksi" />
-
-               <div class="mb-3">
-                  <label for="nama" class="form-label">Nama</label>
-                  <input
-                     type="text"
-                     id="nama"
-                     class="form-control"
-                     placeholder="Masukkan nama"
-                     required
-                  />
-               </div>
-
-               <div class="mb-3">
-                  <label for="produk" class="form-label">Produk</label>
-                  <input
-                     type="text"
-                     id="produk"
-                     class="form-control"
-                     placeholder="Nama produk"
-                     required
-                  />
-               </div>
-
-               <div class="mb-3">
-                  <label for="jumlah" class="form-label">Jumlah</label>
-                  <input
-                     type="number"
-                     id="jumlah"
-                     class="form-control"
-                     placeholder="Jumlah barang"
-                     required
-                  />
-               </div>
-
-               <div class="mb-3">
-                  <label for="total" class="form-label">Total Harga</label>
-                  <input
-                     type="number"
-                     id="total"
-                     class="form-control"
-                     placeholder="Total harga"
-                     required
-                  />
-               </div>
-
-               <button type="submit" class="btn btn-primary" id="btnSubmit">
-                  Simpan Transaksi
-               </button>
-               <button
-                  type="button"
-                  class="btn btn-secondary"
-                  id="btnCancel"
-                  style="display: none"
-               >
-                  Batal
-               </button>
-            </form>
-         </div>
-
-         <!-- Tabel Data -->
-         <div class="card p-4">
-            <h4>Data Transaksi</h4>
-            <table class="table table-bordered mt-3 text-center align-middle">
-               <thead class="table-dark">
+   <body>
+      <div class="container">
+         <div class="table-container">
+            <h1>Daftar Transaksi</h1>
+            <button id="addDataBtn" class="btn btn-primary mb-3">
+               + Tambah Transaksi
+            </button>
+            <table
+               id="transaksi-table"
+               class="table table-bordered table-hover"
+            >
+               <thead>
                   <tr>
-                     <th>ID</th>
-                     <th>Nama</th>
-                     <th>Produk</th>
+                     <th>ID Transaksi</th>
+                     <th>Tanggal Transaksi</th>
+                     <th>ID Produk</th>
+                     <th>Nama Produk</th>
                      <th>Jumlah</th>
-                     <th>Total</th>
+                     <th>Total Harga</th>
+                     <th>Status Transaksi</th>
                      <th>Aksi</th>
                   </tr>
                </thead>
-               <tbody id="tabelData">
+               <tbody>
                   <tr>
-                     <td colspan="6">Memuat data...</td>
+                     <td colspan="6" class="text-center">
+                        Data transaksi akan muncul di sini...
+                     </td>
                   </tr>
                </tbody>
             </table>
          </div>
       </div>
 
+      <div class="form-container" id="formContainer">
+         <h3 id="formTitle">Tambah Transaksi Baru</h3>
+         <form id="transaksiForm">
+            <div class="mb-3">
+               <label for="tanggal" class="form-label">Tanggal Transaksi</label>
+               <input
+                  type="date"
+                  class="form-control"
+                  id="tanggalTransaksi"
+                  required
+               />
+            </div>
+
+            <div class="mb-3">
+               <label for="idProduk" class="form-label">ID Produk</label>
+               <input type="text" class="form-control" id="idProduk" required />
+            </div>
+
+            <div class="mb-3">
+               <label for="namaProduk" class="form-label">Nama Produk</label>
+               <input
+                  type="text"
+                  class="form-control"
+                  id="namaProduk"
+                  required
+               />
+            </div>
+
+            <div class="mb-3">
+               <label for="jumlah" class="form-label">Jumlah</label>
+               <input type="number" class="form-control" id="jumlah" required />
+            </div>
+
+            <div class="mb-3">
+               <label for="totalHarga" class="form-label">Total Harga</label>
+               <input
+                  type="number"
+                  class="form-control"
+                  id="totalHarga"
+                  required
+               />
+            </div>
+
+            <div class="mb-3">
+               <label for="statusTransaksi" class="form-label"
+                  >Status Transaksi</label
+               >
+               <select class="form-control" id="statusTransaksi" required>
+                  <option value="Selesai">Selesai</option>
+                  <option value="Pending">Pending</option>
+               </select>
+            </div>
+
+            <button type="submit" class="btn btn-success" id="submitBtn">
+               Submit
+            </button>
+            <button type="button" id="cancelBtn" class="btn btn-secondary">
+               Cancel
+            </button>
+         </form>
+      </div>
+
+      <!-- Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
       <script>
-         const apiRead = "https://api.roniprsty.com/transaksi/read.php";
-         const apiCreate = "https://api.roniprsty.com/transaksi/create.php";
-         const apiUpdate = "https://api.roniprsty.com/transaksi/update.php";
+         const readUrl = "https://api.roniprsty.com/transaksi/read.php";
+         const createUrl = "https://api.roniprsty.com/transaksi/create.php";
+         const updateUrl = "https://api.roniprsty.com/transaksi/update.php";
 
-         const tabel = document.getElementById("tabelData");
-         const form = document.getElementById("transaksiForm");
-         const btnSubmit = document.getElementById("btnSubmit");
-         const btnCancel = document.getElementById("btnCancel");
-         const formTitle = document.getElementById("form-title");
+         // Fungsi untuk ambil dan tampilkan data
+         async function getTransaksi() {
+            try {
+               const response = await fetch(readUrl);
+               if (!response.ok)
+                  throw new Error(`HTTP error: ${response.status}`);
 
-         // 🔹 Fungsi untuk ambil data (READ)
-         async function loadData() {
-            tabel.innerHTML = "<tr><td colspan='6'>Memuat data...</td></tr>";
-            const res = await fetch(apiRead);
-            const data = await res.json();
-            if (data && data.data) {
-               tabel.innerHTML = data.data
-                  .map(
-                     (row) => `
-          <tr>
-            <td>${row.id_transaksi}</td>
-            <td>${row.nama}</td>
-            <td>${row.produk}</td>
-            <td>${row.jumlah}</td>
-            <td>${row.total}</td>
-            <td>
-              <button class="btn btn-warning btn-sm" onclick="editData('${row.id_transaksi}', '${row.nama}', '${row.produk}', '${row.jumlah}', '${row.total}')">Edit</button>
-            </td>
-          </tr>
-        `
-                  )
-                  .join("");
-            } else {
-               tabel.innerHTML =
-                  "<tr><td colspan='6'>Tidak ada data ditemukan</td></tr>";
+               const json = await response.json();
+
+               // pastikan data selalu array
+               let data = [];
+               if (Array.isArray(json)) {
+                  data = json;
+               } else if (json.records && Array.isArray(json.records)) {
+                  data = json.records;
+               } else if (json.id_transaksi) {
+                  data = [json]; // jika hanya 1 record
+               }
+
+               const tbody = document.querySelector("#transaksi-table tbody");
+               tbody.innerHTML = "";
+
+               if (data.length === 0) {
+                  tbody.innerHTML = `<tr><td colspan="8" class="text-center">Tidak ada data transaksi.</td></tr>`;
+                  return;
+               }
+
+               data.forEach((trx) => {
+                  tbody.innerHTML += `
+            <tr>
+               <td>${trx.id_transaksi || ""}</td>
+               <td>${trx.tanggal_transaksi || ""}</td>
+               <td>${trx.id_produk || ""}</td>
+               <td>${trx.nama_produk || ""}</td>
+               <td>${trx.jumlah || ""}</td>
+               <td>${trx.total_harga || ""}</td>
+               <td>${trx.status_transaksi || ""}</td>
+               <td>
+                  <button class="btn btn-warning btn-sm" onclick="editTransaksi('${
+                     trx.id_transaksi
+                  }')">Edit</button>
+               </td>
+            </tr>`;
+               });
+            } catch (err) {
+               console.error("Gagal ambil data:", err);
+               document.querySelector(
+                  "#transaksi-table tbody"
+               ).innerHTML = `<tr><td colspan="8" class="text-center text-danger">Gagal mengambil data.</td></tr>`;
             }
          }
 
-         loadData();
+         getTransaksi();
 
-         // 🔹 Fungsi untuk tambah / update data
-         form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+         // Tombol Tambah Data
+         document.getElementById("addDataBtn").addEventListener("click", () => {
+            document.getElementById("formTitle").textContent =
+               "Tambah Transaksi Baru";
+            document.getElementById("submitBtn").textContent = "Submit";
+            document.getElementById("transaksiForm").reset();
+            delete document.getElementById("transaksiForm").dataset.id;
+            document.getElementById("formContainer").style.display = "block";
+         });
 
-            const id = document.getElementById("id_transaksi").value;
-            const nama = document.getElementById("nama").value;
-            const produk = document.getElementById("produk").value;
-            const jumlah = document.getElementById("jumlah").value;
-            const total = document.getElementById("total").value;
+         // Tombol Cancel
+         document.getElementById("cancelBtn").addEventListener("click", () => {
+            document.getElementById("formContainer").style.display = "none";
+         });
 
-            const payload = { id_transaksi: id, nama, produk, jumlah, total };
+         // Submit Form (CREATE & UPDATE)
+         document
+            .getElementById("transaksiForm")
+            .addEventListener("submit", async function (e) {
+               e.preventDefault();
 
-            const url = id ? apiUpdate : apiCreate;
+               const id = this.dataset.id;
+               const trxData = {
+                  id_transaksi: id || "",
+                  tanggal_transaksi:
+                     document.getElementById("tanggalTransaksi").value,
+                  id_produk: document.getElementById("idProduk").value,
+                  nama_produk: document.getElementById("namaProduk").value,
+                  jumlah: document.getElementById("jumlah").value,
+                  total_harga: document.getElementById("totalHarga").value,
+                  status_transaksi:
+                     document.getElementById("statusTransaksi").value,
+               };
 
-            const res = await fetch(url, {
-               method: "POST",
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify(payload),
+               try {
+                  const url = id ? updateUrl : createUrl;
+
+                  const response = await fetch(url, {
+                     method: "POST",
+                     headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                     },
+                     body: new URLSearchParams(trxData),
+                  });
+
+                  const resultText = await response.text();
+                  console.log("Server response:", resultText);
+
+                  if (!response.ok) throw new Error("Server error");
+
+                  alert(
+                     id
+                        ? "Transaksi berhasil diperbarui"
+                        : "Transaksi berhasil ditambahkan"
+                  );
+
+                  await getTransaksi();
+                  document.getElementById("formContainer").style.display =
+                     "none";
+               } catch (err) {
+                  console.error("Gagal kirim data:", err);
+                  alert("Gagal menyimpan transaksi.");
+               }
             });
 
-            const result = await res.json();
-            alert(result.message || "Operasi berhasil");
+         // Edit Transaksi
+         async function editTransaksi(id) {
+            try {
+               const response = await fetch(readUrl);
+               const json = await response.json();
 
-            form.reset();
-            btnCancel.style.display = "none";
-            btnSubmit.textContent = "Simpan Transaksi";
-            formTitle.textContent = "Tambah Transaksi";
-            loadData();
-         });
+               let data = [];
+               if (Array.isArray(json)) data = json;
+               else if (json.records && Array.isArray(json.records))
+                  data = json.records;
+               else if (json.id_transaksi) data = [json];
 
-         // 🔹 Fungsi untuk edit data
-         function editData(id, nama, produk, jumlah, total) {
-            document.getElementById("id_transaksi").value = id;
-            document.getElementById("nama").value = nama;
-            document.getElementById("produk").value = produk;
-            document.getElementById("jumlah").value = jumlah;
-            document.getElementById("total").value = total;
+               const trx = data.find((t) => t.id_transaksi == id);
 
-            btnSubmit.textContent = "Update Transaksi";
-            btnCancel.style.display = "inline-block";
-            formTitle.textContent = "Ubah Transaksi";
+               if (!trx) {
+                  alert("Data transaksi tidak ditemukan.");
+                  return;
+               }
+
+               document.getElementById("tanggalTransaksi").value =
+                  trx.tanggal_transaksi;
+               document.getElementById("idProduk").value = trx.id_produk;
+               document.getElementById("namaProduk").value = trx.nama_produk;
+               document.getElementById("jumlah").value = trx.jumlah;
+               document.getElementById("totalHarga").value = trx.total_harga;
+               document.getElementById("statusTransaksi").value =
+                  trx.status_transaksi;
+
+               document.getElementById("formTitle").textContent =
+                  "Update Data Transaksi";
+               document.getElementById("submitBtn").textContent = "Update";
+               document.getElementById("transaksiForm").dataset.id =
+                  trx.id_transaksi;
+               document.getElementById("formContainer").style.display = "block";
+            } catch (err) {
+               console.error("Gagal edit data:", err);
+               alert("Terjadi kesalahan saat mengambil data transaksi.");
+            }
          }
-
-         // 🔹 Batal update
-         btnCancel.addEventListener("click", () => {
-            form.reset();
-            document.getElementById("id_transaksi").value = "";
-            btnSubmit.textContent = "Simpan Transaksi";
-            btnCancel.style.display = "none";
-            formTitle.textContent = "Tambah Transaksi";
-         });
       </script>
    </body>
 </html>
